@@ -6,7 +6,7 @@
 ## Copyright (C) 2014  chevalierdenis@gmx.com                           ##
 ##                                                                      ##
 ## https://github.com/denischevalier/dkb                                ##
-## Basé sur PyKeylogger @ http://pykeylogger.sourceforge.net            ##
+## Based on PyKeylogger AT http://pykeylogger.sourceforge.net           ##
 ##                                                                      ##
 ## This program is free software; you can redistribute it and/or        ##
 ## modify it under the terms of the GNU General Public License          ##
@@ -188,11 +188,11 @@ class DwmKeyboardBinder:
     def __init__(self):
         self.ControlKeyHash = \
                 ControlKeyHash('F12')
-                        
+
         self.spawn_event_threads()
         self.hashchecker = ControlKeyMonitor(
                 self.ControlKeyHash)
-        
+
         self.hm = hooklib.HookManager()
         self.hm.HookKeyboard()
         self.hm.KeyDown = self.OnKeyDownEvent
@@ -309,4 +309,5 @@ class ControlKeyMonitor(threading.Thread):
 if __name__ == '__main__':
     kl = DwmKeyboardBinder()
     kl.start()
+
 
