@@ -13,6 +13,15 @@ Instructions
 ---
 Pour utiliser ce logiciel, entrez simplement `./dkb` dans un terminal, et observez le en action. La touche Scroll_Lock permet de l'arrêter proprement. 
 
+Etat du projet
+---
+dkb est à présent capable de monitorer tous les évènements clavier du display Xorg sur lequel il est lancé.
+Afin de rester dans une philosophie unix, le reste du programme sera dévelopé de manière à piper la sortie de dkb :
+Un programme, une fonctionnalité.
+
+Le tout sera encapsulé dans un script shell qui fera le liant entre les différents composants.
+
+A terme, je prévoies (éventuellement) de réécrire les outils en `c` / `c++` :( / `golang`.
 
 ______
 English
@@ -27,3 +36,12 @@ This software is under heavy development. Fonctionnalities will comme as soon as
 Instructions
 ---
 In order to use this software, you simply have to type `./dkb` on a terminal, and observe it in action. The Scroll_Lock keyboard key permits to stop it properly.
+
+Activity of the project
+---
+dkb is now able to monitor every keyboard event on its Xorg display. 
+In order to stay in the UNIX philosophy, the other parts of the software will be developed so that they would pipe dkb's out: One command, one fonctionnality.
+
+All of that will be encapsulated into a bash script which will link all of its parts.
+
+In the long term, I would rewrite the tools in `c` / `c++` :( / `golang`.
