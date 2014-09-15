@@ -37,7 +37,7 @@ This software is under heavy development. Fonctionnalities will comme as soon as
 
 Technical description
 ---
-This software is coded in python3 using OOP and Paralelizm. It needs just a few dependancies: mostly xlib, and pillow. This last one is included in the source.dkb is forked, simplified (it uses just a very little subset of the original software) and updated from pykeylogger @ http://sourceforge.com/projects/pykeylogger.
+This software is coded in python3 using OOP and Parallelizm. It needs just a few dependancies: mostly xlib, and pillow. This last one is included in the source.dkb is forked, simplified (it uses just a very little subset of the original software) and updated from pykeylogger @ http://sourceforge.com/projects/pykeylogger.
 
 Instructions
 ---
