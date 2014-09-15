@@ -8,6 +8,9 @@ Attention
 ---
 Ce logiciel est en cours de développement intensif. Les fonctionnalités viendront au fur et à mesure.
 
+Description technique
+---
+Ce logiciel est codé en python3 orienté objet parallèle. Il utilise peu de dépendances: principalement Xlib, pillow et validate.py (part de ConfigObj @ https://github.com/DiffSK/configobj). Ce dernier est inclus dans la source.dkb est un fork, une simplification (il n'en utilise qu'une infime partie) et une mise à jour de pykeylogger @ http://sourceforge.com/projects/pykeylogger.
 
 Instructions
 ---
@@ -32,6 +35,9 @@ Warning
 ---
 This software is under heavy development. Fonctionnalities will comme as soon as they will be developed *(ie. When I'll have some time do do so)*.
 
+Technical description
+---
+This software is coded in python3 using OOP and Paralelizm. It needs just a few dependancies: mostly xlib, pillow and validate.py (part of ConfigObj @ https://github.com/DiffSK/configobj). This last one is included in the source.dkb is forked, simplified (it uses just a very little subset of the original software) and updated from pykeylogger @ http://sourceforge.com/projects/pykeylogger.
 
 Instructions
 ---
