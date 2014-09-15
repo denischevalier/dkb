@@ -1,4 +1,4 @@
 #!/bin/sh
 stty -echo
-dkb.py
+./dkb.py
 stty echo
