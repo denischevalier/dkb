@@ -23,7 +23,7 @@
 ##                                                                      ##
 ##########################################################################
 
-import pyxhook as hooklib
+import pyxhook
 import time
 import threading
 import queue
@@ -192,7 +192,7 @@ class DwmKeyboardBinder:
         self.hashchecker = ControlKeyMonitor(
                 self.ControlKeyHash)
 
-        self.hm = hooklib.HookManager()
+        self.hm = pyxhook.HookManager()
         self.hm.HookKeyboard()
         self.hm.KeyDown = self.OnKeyDownEvent
         self.hm.KeyUp = self.OnKeyUpEvent
