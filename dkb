@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 ##########################################################################
 ##                                                                      ##
 ## dkb: Simple Python Keybinder for Linux                               ##
@@ -29,7 +29,6 @@ import threading
 import queue
 import os
 import sys
-from myutils import (to_unicode)
 
 class BaseEventClass(threading.Thread):
     def __init__(self, event_queue, loggername, *args, **kwargs):
@@ -90,26 +89,26 @@ class DetailedLogWriterFirstStage(FirstStageBaseEventClass):
         try:
             event = self.q.get(timeout=0.05)
             if not event.MessageName.startswith('key down'):
-                print('[INFO]Not an useful event')
+                print(('[INFO]Not an useful event'))
                 return
             process_name = self.get_process_name(event)
-            sys.stdout.buffer.write(to_unicode(event.Key + '\n'))
+            print((event.Key + '\n'))
             username = self.get_username()
             self.sst_q.put((process_name, username, event))
         except queue.Empty:
             pass
-        #except:
-        #    print('[WARN] Some exception was caught in the logwriter loop...')
-        #    pass
+        except:
+            print(('[WARN] Some exception was caught in the logwriter loop...'))
+            pass
 
     def get_process_name(self, event):
-        return to_unicode(event.WindowProcName)
+        return event.WindowProcName
 
     def get_username(self):
         return os.getenv('USER')
 
     def spawn_second_stage_thread(self):
-        print ('[DEBUG]Entering second stage thread')
+        print(('[DEBUG]Entering second stage thread'))
         self.sst_q = queue.Queue(0)
         self.sst = DetailedLogWriterSecondStage(self.dir_lock,
                 self.sst_q, self.loggername)
@@ -124,15 +123,15 @@ class DetailedLogWriterSecondStage(SecondStageBaseEventClass):
     def process_event(self):
         try:
             (process_name, username, event) = self.q.get(timeout=0.05)
-            eventlisttmp = [to_unicode(time.strftime('%Y%m%d')),
-                    to_unicode(time.strftime('%H%M')),
-                    to_unicode(process_name).replace(self.field_sep,
+            eventlisttmp = [time.strftime('%Y%m%d'),
+                    time.strftime('%H%M'),
+                    process_name.replace(self.field_sep,
                         '[sep_key]'),
-                    to_unicode(event.Window),
-                    to_unicode(username).replace(self.field_sep,
+                    event.Window,
+                    username.replace(self.field_sep,
                         '[sep_key]')]
 
-            eventlisttmp.append(to_unicode(self.parse_event_value(event)))
+            eventlisttmp.append(self.parse_event_value(event))
 
             if (self.eventlist[:6] == eventlisttmp[:6]):
                 self.eventlist[-1] = self.eventlist[-1] + eventlisttmp[-1]
@@ -141,8 +140,8 @@ class DetailedLogWriterSecondStage(SecondStageBaseEventClass):
                 self.eventlist = eventlisttmp
         except queue.Empty:
             if self.eventlist[:2] != list(range(2)) and \
-                    self.eventlist[:2] != [to_unicode(time.strftime('%Y%m%d')),
-                            to_unicode(time.strftime('%H%M'))]:
+                    self.eventlist[:2] != [time.strftime('%Y%m%d'),
+                            time.strftime('%H%M')]:
                         self.write_to_logfile()
                         self.eventlist = list(range(7))
         except:
@@ -175,7 +174,7 @@ class DetailedLogWriterSecondStage(SecondStageBaseEventClass):
     def write_to_logfile(self):
         if self.eventlist[:7] != list(range(7)):
             try:
-                line = to_unicode(self.field_sep).join(self.eventlist)
+                line = self.field_sep.join(self.eventlist)
                 print(('[DEBUG]' + line))
             except:
                 pass
@@ -206,7 +205,7 @@ class DwmKeyboardBinder:
             self.event_threads["General"] = \
                 DetailedLogWriterFirstStage(self.queues["General"], "General")
         except KeyError:
-            print ('[WARN]Not creating thread for section General')
+            print(('[WARN]Not creating thread for section General'))
             pass
 
     def start(self):
@@ -221,7 +220,7 @@ class DwmKeyboardBinder:
             if ( str(event.Key) == 'Scroll_Lock' ):
                 self.stop()
                 return
-            print('[DEBUG]KeyDown')#event.__str__())
+            print(('[DEBUG]KeyDown'))
             self.queues[key].put(event)
 
     def OnKeyDownEvent(self, event):
@@ -253,7 +252,7 @@ class ControlKeyHash:
                 'Super_l':'Lwin',
                 'Page_up':'Prior'}
 
-        win_lin_dict = dict([(v,k) for (k,v) in lin_win_dict.items()])
+        win_lin_dict = dict([(v,k) for (k,v) in list(lin_win_dict.items())])
 
         self.controlKeyList = controlkeysetting.split(';')
 
