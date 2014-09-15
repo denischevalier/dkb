@@ -93,7 +93,7 @@ class DetailedLogWriterFirstStage(FirstStageBaseEventClass):
                 print('[INFO]Not an useful event')
                 return
             process_name = self.get_process_name(event)
-            print((str(to_unicode(event.Key)) + '\n'))
+            sys.stdout.buffer.write(to_unicode(event.Key + '\n'))
             username = self.get_username()
             self.sst_q.put((process_name, username, event))
         except queue.Empty:
