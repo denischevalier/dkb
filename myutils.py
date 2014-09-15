@@ -72,11 +72,11 @@ def to_unicode(x):
         return ''
     
     # if this is not a string, let's try converting it
-    if not isinstance(x, basestring):
+    if not isinstance(x, str):
         x = str(x)
         
     # if this is a unicode string, encode it and return
-    if isinstance(x, unicode):
+    if isinstance(x, str):
         return x.encode('utf-8')
     
     # now try a bunch of likely encodings

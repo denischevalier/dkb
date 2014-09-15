@@ -26,7 +26,7 @@
 import pyxhook as hooklib
 import time
 import threading
-import Queue
+import queue
 import os
 import sys
 from myutils import (to_unicode)
@@ -52,7 +52,7 @@ class BaseEventClass(threading.Thread):
         try:
             event = self.q.get(timeout=0.05)
             print(event)
-        except Queue.Empty:
+        except queue.Empty:
             pass
         except:
             print('[WARN]Some exception was caught in the logwriter loop...')
@@ -71,7 +71,7 @@ class FirstStageBaseEventClass(BaseEventClass):
         BaseEventClass.run(self)
 
     def cancel(self):
-        for key in self.timer_threads.keys():
+        for key in list(self.timer_threads.keys()):
             self.timer_threads[key].cancel()
         self.sst.cancel()
         BaseEventClass.cancel(self)
@@ -93,14 +93,14 @@ class DetailedLogWriterFirstStage(FirstStageBaseEventClass):
                 print('[INFO]Not an useful event')
                 return
             process_name = self.get_process_name(event)
-            print(to_unicode(event.Key) + '\n')
+            print((str(to_unicode(event.Key)) + '\n'))
             username = self.get_username()
             self.sst_q.put((process_name, username, event))
-        except Queue.Empty:
+        except queue.Empty:
             pass
-        except:
-            print('[WARN] Some exception was caught in the logwriter loop...')
-            pass
+        #except:
+        #    print('[WARN] Some exception was caught in the logwriter loop...')
+        #    pass
 
     def get_process_name(self, event):
         return to_unicode(event.WindowProcName)
@@ -110,7 +110,7 @@ class DetailedLogWriterFirstStage(FirstStageBaseEventClass):
 
     def spawn_second_stage_thread(self):
         print ('[DEBUG]Entering second stage thread')
-        self.sst_q = Queue.Queue(0)
+        self.sst_q = queue.Queue(0)
         self.sst = DetailedLogWriterSecondStage(self.dir_lock,
                 self.sst_q, self.loggername)
 
@@ -118,7 +118,7 @@ class DetailedLogWriterSecondStage(SecondStageBaseEventClass):
     def __init__(self, dir_lock, *args, **kwargs):
         SecondStageBaseEventClass.__init__(self, dir_lock, *args, **kwargs)
         self.task_function = self.process_event
-        self.eventlist = range(7)
+        self.eventlist = list(range(7))
         self.field_sep = ';'
 
     def process_event(self):
@@ -139,12 +139,12 @@ class DetailedLogWriterSecondStage(SecondStageBaseEventClass):
             else:
                 self.write_to_logfile()
                 self.eventlist = eventlisttmp
-        except Queue.Empty:
-            if self.eventlist[:2] != range(2) and \
+        except queue.Empty:
+            if self.eventlist[:2] != list(range(2)) and \
                     self.eventlist[:2] != [to_unicode(time.strftime('%Y%m%d')),
                             to_unicode(time.strftime('%H%M'))]:
                         self.write_to_logfile()
-                        self.eventlist = range(7)
+                        self.eventlist = list(range(7))
         except:
             pass
 
@@ -173,10 +173,10 @@ class DetailedLogWriterSecondStage(SecondStageBaseEventClass):
         return(chr(event.Ascii))
 
     def write_to_logfile(self):
-        if self.eventlist[:7] != range(7):
+        if self.eventlist[:7] != list(range(7)):
             try:
                 line = to_unicode(self.field_sep).join(self.eventlist)
-                print('[DEBUG]' + line)
+                print(('[DEBUG]' + line))
             except:
                 pass
 
@@ -202,7 +202,7 @@ class DwmKeyboardBinder:
         self.event_threads = {}
         self.queues = {}
         try:
-            self.queues["General"] = Queue.Queue(0)
+            self.queues["General"] = queue.Queue(0)
             self.event_threads["General"] = \
                 DetailedLogWriterFirstStage(self.queues["General"], "General")
         except KeyError:
@@ -210,14 +210,14 @@ class DwmKeyboardBinder:
             pass
 
     def start(self):
-        for key in self.event_threads.keys():
-            print('[INFO]Starting thread ' + key)
+        for key in list(self.event_threads.keys()):
+            print(('[INFO]Starting thread ' + key))
             self.event_threads[key].start()
         self.hashchecker.start()
         self.hm.start()
 
     def push_event_to_queues(self, event):
-        for key in self.queues.keys():
+        for key in list(self.queues.keys()):
             if ( str(event.Key) == 'Scroll_Lock' ):
                 self.stop()
                 return
@@ -237,7 +237,7 @@ class DwmKeyboardBinder:
         self.hm.cancel()
         self.hashchecker.cancel()
 
-        for key in self.event_threads.keys():
+        for key in list(self.event_threads.keys()):
             self.event_threads[key].cancel()
         time.sleep(0.2)
         sys.exit()
@@ -253,7 +253,7 @@ class ControlKeyHash:
                 'Super_l':'Lwin',
                 'Page_up':'Prior'}
 
-        win_lin_dict = dict([(v,k) for (k,v) in lin_win_dict.iteritems()])
+        win_lin_dict = dict([(v,k) for (k,v) in lin_win_dict.items()])
 
         self.controlKeyList = controlkeysetting.split(';')
 
@@ -261,28 +261,28 @@ class ControlKeyHash:
                 [item.capitalize() for item in self.controlKeyList]
         self.controlKeyList = list(set(self.controlKeyList))
         for item in self.controlKeyList:
-            if item in win_lin_dict.keys():
+            if item in list(win_lin_dict.keys()):
                 self.controlKeyList[self.controlKeyList.index(item)] = \
                         lin_win_dict[item]
 
-        self.controlKeyHash = dict(zip(
+        self.controlKeyHash = dict(list(zip(
             self.controlKeyList,
-            [False for item in self.controlKeyList]))
+            [False for item in self.controlKeyList])))
 
     def update(self, event):
         if event.MessageName == 'key down' and \
-                event.Key.capitalize() in self.controlKeyHash.keys():
+                event.Key.capitalize() in list(self.controlKeyHash.keys()):
                     self.controlKeyHash[event.Key.capitalize()] = True
         if event.MessageName == 'key up' and \
-                event.Key.capitalize() in self.controlKeyHash.keys():
+                event.Key.capitalize() in list(self.controlKeyHash.keys()):
                     self.controlKeyHash[event.Key.capitalize()] = False
 
     def reset(self):
-        for key in self.controlKeyHash.keys():
+        for key in list(self.controlKeyHash.keys()):
             self.controlKeyHash[key] = False
 
     def check(self):
-        if self.controlKeyHash.values() == [True] * len(self.controlKeyHash):
+        if list(self.controlKeyHash.values()) == [True] * len(self.controlKeyHash):
             return True
         else:
             return False
