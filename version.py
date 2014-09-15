@@ -5,7 +5,7 @@ name = "dkb"
 # Change this for stealth.
 description = "Simple Python Keybinder for linux (Xorg)"
 
-version = "0.1"
+version = "git"
 url = "https://github.com/denischevalier/dkb/"
 license = "GPLv3"
 author = "Denis Chevalier"
