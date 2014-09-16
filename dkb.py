@@ -29,6 +29,7 @@ import threading
 import queue
 import os
 import sys
+import signal
 
 class BaseEventClass(threading.Thread):
     def __init__(self, event_queue, loggername, *args, **kwargs):
@@ -305,7 +306,13 @@ class ControlKeyMonitor(threading.Thread):
     def cancel(self):
         self.finished.set()
 
+def SigIntHandler(signum, frame):
+    print ('[WARNING]SIGINT (Ctrl+C) signal received, continuing: please exit dkb properly by pressing the Scoll_Lock keyboard key.',
+            file=sys.stderr)
+
 if __name__ == '__main__':
+    # Set the signal handler for SIGINT
+    signal.signal(signal.SIGINT, SigIntHandler)
     kl = DwmKeyboardBinder()
     kl.start()
 
