@@ -58,7 +58,7 @@ class BaseEventClass(threading.Thread):
             print('[WARN]Some exception was caught in the logwriter loop...', file=sys.stderr)
             pass
 
-class DetailedLogWriterFirstStage(BaseEventClass):
+class DetailedWriterFirstStage(BaseEventClass):
     def __init__(self, *args, **kwargs):
         BaseEventClass.__init__(self, *args, **kwargs)
 
@@ -102,10 +102,10 @@ class DetailedLogWriterFirstStage(BaseEventClass):
     def spawn_second_stage_thread(self):
         print(('[DEBUG]Entering second stage thread'),file=sys.stderr)
         self.sst_q = queue.Queue(0)
-        self.sst = DetailedLogWriterSecondStage(self.dir_lock,
+        self.sst = DetailedWriterSecondStage(self.dir_lock,
                 self.sst_q, self.loggername)
 
-class DetailedLogWriterSecondStage(BaseEventClass):
+class DetailedWriterSecondStage(BaseEventClass):
     def __init__(self, dir_lock, *args, **kwargs):
         BaseEventClass.__init__(self,*args,**kwargs)
         self.dir_lock = dir_lock
@@ -129,13 +129,13 @@ class DetailedLogWriterSecondStage(BaseEventClass):
             if (self.eventlist[:6] == eventlisttmp[:6]):
                 self.eventlist[-1] = self.eventlist[-1] + eventlisttmp[-1]
             else:
-                self.write_to_logfile()
+                self.write_to_stderr()
                 self.eventlist = eventlisttmp
         except queue.Empty:
             if self.eventlist[:2] != list(range(2)) and \
                     self.eventlist[:2] != [time.strftime('%Y%m%d'),
                             time.strftime('%H%M')]:
-                        self.write_to_logfile()
+                        self.write_to_stderr()
                         self.eventlist = list(range(7))
         except:
             pass
@@ -164,7 +164,7 @@ class DetailedLogWriterSecondStage(BaseEventClass):
 
         return(chr(event.Ascii))
 
-    def write_to_logfile(self):
+    def write_to_stderr(self):
         if self.eventlist[:7] != list(range(7)):
             try:
                 line = self.field_sep.join(self.eventlist)
@@ -173,7 +173,7 @@ class DetailedLogWriterSecondStage(BaseEventClass):
                 pass
 
     def cancel(self):
-        self.write_to_logfile()
+        self.write_to_stderr()
         SecondStageBaseEventClass.cancel(self)
 
 class DwmKeyboardBinder:
@@ -196,7 +196,7 @@ class DwmKeyboardBinder:
         try:
             self.queues["General"] = queue.Queue(0)
             self.event_threads["General"] = \
-                DetailedLogWriterFirstStage(self.queues["General"], "General")
+                DetailedWriterFirstStage(self.queues["General"], "General")
         except KeyError:
             print(('[WARN]Not creating thread for section General'),file=sys.stderr)
             pass
