@@ -176,7 +176,7 @@ class DetailedWriterSecondStage(BaseEventClass):
         self.write_to_stderr()
         SecondStageBaseEventClass.cancel(self)
 
-class KeyboardBinder:
+class KeyboardLogger:
     def __init__(self):
         self.ControlKeyHash = \
                 ControlKeyHash('F12')
@@ -305,7 +305,7 @@ def SigIntHandler(signum, frame):
 if __name__ == '__main__':
     # Set the signal handler for SIGINT
     signal.signal(signal.SIGINT, SigIntHandler)
-    kl = KeyboardBinder()
+    kl = KeyboardLogger()
     kl.start()
 
 
