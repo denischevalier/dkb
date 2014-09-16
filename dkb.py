@@ -58,11 +58,6 @@ class BaseEventClass(threading.Thread):
             print('[WARN]Some exception was caught in the logwriter loop...', file=sys.stderr)
             pass
 
-class SecondStageBaseEventClass(BaseEventClass):
-    def __init__(self, dir_lock, *args, **kwargs):
-        BaseEventClass.__init__(self,*args,**kwargs)
-        self.dir_lock = dir_lock
-
 class DetailedLogWriterFirstStage(BaseEventClass):
     def __init__(self, *args, **kwargs):
         BaseEventClass.__init__(self, *args, **kwargs)
@@ -110,9 +105,10 @@ class DetailedLogWriterFirstStage(BaseEventClass):
         self.sst = DetailedLogWriterSecondStage(self.dir_lock,
                 self.sst_q, self.loggername)
 
-class DetailedLogWriterSecondStage(SecondStageBaseEventClass):
+class DetailedLogWriterSecondStage(BaseEventClass):
     def __init__(self, dir_lock, *args, **kwargs):
-        SecondStageBaseEventClass.__init__(self, dir_lock, *args, **kwargs)
+        BaseEventClass.__init__(self,*args,**kwargs)
+        self.dir_lock = dir_lock
         self.task_function = self.process_event
         self.eventlist = list(range(7))
         self.field_sep = ';'
