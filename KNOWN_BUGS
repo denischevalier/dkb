@@ -1,1 +1,0 @@
-KeybordLogger.stop() is causing dkb.py to freeze. Reason not found at the moment.
