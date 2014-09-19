@@ -174,6 +174,7 @@ class DetailedWriterSecondStage(BaseEventClass):
 
     def cancel(self):
         self.write_to_stderr()
+        self.finished.set()
 
 class KeyboardLogger:
     def __init__(self):
