@@ -121,8 +121,6 @@ class DetailedWriterSecondStage(BaseEventClass):
                     username.replace(self.field_sep,
                         '[sep_key]')]
 
-            eventlisttmp.append(self.parse_event_value(event))
-
             if (self.eventlist[:6] == eventlisttmp[:6]):
                 self.eventlist[-1] = self.eventlist[-1] + eventlisttmp[-1]
             else:
@@ -134,30 +132,6 @@ class DetailedWriterSecondStage(BaseEventClass):
                         self.eventlist = list(range(7))
         except:
             pass
-
-    def parse_event_value(self, event):
-        npchrstr = "[KeyName:%keyname%]"
-        npchrstr = re.sub('%keyname%', event.Key, npchrstr)
-
-        if chr(event.Ascii) == selg.field_sep:
-            return(npchrstr)
-
-        # Backspace
-        if event.Ascii == 8:
-            return(npchrstr)
-
-        # Escape
-        if event.Ascii == 27:
-            return(npchrstr)
-
-        # Returns
-        if event.Ascii == 13:
-            return(npchrstr)
-
-        if event.Ascii == 0:
-            return(npchrstr)
-
-        return(chr(event.Ascii))
 
     def cancel(self):
         self.finished.set()
