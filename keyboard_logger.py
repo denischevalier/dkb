@@ -55,17 +55,14 @@ class DetailedWriterFirstStage(BaseEventClass):
 
         self.dir_lock = threading.RLock()
         self.timer_threads = {}
-        self.spawn_second_stage_thread()
         self.task_function = self.process_event
 
     def run(self):
-        self.sst.start()
         BaseEventClass.run(self)
 
     def cancel(self):
         for key in list(self.timer_threads.keys()):
             self.timer_threads[key].cancel()
-        self.sst.cancel()
         BaseEventClass.cancel(self)
 
     def process_event(self):
@@ -80,7 +77,6 @@ class DetailedWriterFirstStage(BaseEventClass):
             p.start()
             p.join()
             username = self.get_username()
-            self.sst_q.put((process_name, username, event))
         except queue.Empty:
             pass
         except:
@@ -101,40 +97,6 @@ class DetailedWriterFirstStage(BaseEventClass):
         self.sst_q = queue.Queue(0)
         self.sst = DetailedWriterSecondStage(self.dir_lock,
                 self.sst_q, self.loggername)
-
-class DetailedWriterSecondStage(BaseEventClass):
-    def __init__(self, dir_lock, *args, **kwargs):
-        BaseEventClass.__init__(self,*args,**kwargs)
-        self.dir_lock = dir_lock
-        self.task_function = self.process_event
-        self.eventlist = list(range(7))
-        self.field_sep = ';'
-
-    def process_event(self):
-        try:
-            (process_name, username, event) = self.q.get(timeout=0.05)
-            eventlisttmp = [time.strftime('%Y%m%d'),
-                    time.strftime('%H%M'),
-                    process_name.replace(self.field_sep,
-                        '[sep_key]'),
-                    event.Window,
-                    username.replace(self.field_sep,
-                        '[sep_key]')]
-
-            if (self.eventlist[:6] == eventlisttmp[:6]):
-                self.eventlist[-1] = self.eventlist[-1] + eventlisttmp[-1]
-            else:
-                self.eventlist = eventlisttmp
-        except queue.Empty:
-            if self.eventlist[:2] != list(range(2)) and \
-                    self.eventlist[:2] != [time.strftime('%Y%m%d'),
-                            time.strftime('%H%M')]:
-                        self.eventlist = list(range(7))
-        except:
-            pass
-
-    def cancel(self):
-        self.finished.set()
 
 class KeyboardLogger:
     def __init__(self):
