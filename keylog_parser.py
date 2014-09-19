@@ -21,12 +21,12 @@
 ##                                                                      ##
 ##########################################################################
 
-import sys, os
+import asyncio
+import sys
 import fileinput
 
 if __name__ == '__main__':
-    # Always keep the last 4 typed keys
-    buffer = ['', '', '', '']
+    buffer = ['', '', '', '']                               # Always keep the last 4 typed keys
     for line in fileinput.input():                          # For each line in input
         if len(line.rstrip('\n')):                          # if the line is not only a newline
             buffer.pop(0)                                   # pop the first character in buffer (FIFO)
