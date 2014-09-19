@@ -21,6 +21,7 @@
 ##                                                                      ##
 ##########################################################################
 
+import signal
 import asyncio
 import sys
 import time
@@ -56,7 +57,13 @@ class AsyncReader:
         self.charbuf = ''                                               # Empty charbuf
         print('[DEBUG]' + str(self.buffer), file=sys.stderr)            # Print the keycode
 
+def SigIntHandler(signum, frame):
+    print ('[WARNING]SIGINT (Ctrl+C) signal received, continuing:'
+            'Please exit keylog_parser.py properly by passing "Scroll_Lock" to stdin.',
+            file=sys.stderr)
+
 if __name__ == '__main__':
+    signal.signal(signal.SIGINT, SigIntHandler)                         # Set the signal handler for SIGINT
     ar = AsyncReader()                                                  # Create the object
     ar.start()                                                          # Start the event loop
 
