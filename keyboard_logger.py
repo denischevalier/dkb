@@ -48,11 +48,10 @@ class Logger(threading.Thread):
     def process_event(self):
         try:
             event = self.q.get(timeout=0.05)
-            self.ek = event.Key + '\n'
+            self.eventkey = event.Key + '\n'
             p = Process(target=self.write_keycode)
             p.start()
             p.join()
-            username = self.get_username()
         except queue.Empty:
             pass
         except:
@@ -60,10 +59,7 @@ class Logger(threading.Thread):
             pass
 
     def write_keycode(self):
-        sys.stdout.write(self.ek)
-
-    def get_username(self):
-        return os.getenv('USER')
+        sys.stdout.write(self.eventkey)
 
 class KeyboardLogger:
     def __init__(self):
