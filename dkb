@@ -22,8 +22,16 @@
 ##########################################################################
 
 import os
+import sys
+import termios
 
 if __name__ == '__main__':
-    os.system('stty -echo')
-    os.system(' keyboard_logger.py | keylog_parser.py -')
-    os.system('stty echo')
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+    new = termios.tcgetattr(fd)
+    new[3] = new[3] & ~termios.ECHO                         # lflags
+    try:
+        termios.tcsetattr(fd, termios.TCSADRAIN, new)
+        os.system(' keyboard_logger.py | keylog_parser.py -')
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
