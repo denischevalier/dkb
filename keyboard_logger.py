@@ -39,11 +39,9 @@ class Logger(threading.Thread):
 
         self.q = event_queue
 
-        self.task_function = self.process_event
-
     def run(self):
         while not self.finished.isSet():
-            self.task_function()
+            self.process_event()
 
     def cancel(self):
         self.finished.set() 
