@@ -39,7 +39,6 @@ class Logger(threading.Thread):
 
         self.q = event_queue
 
-        self.timer_threads = {}
         self.task_function = self.process_event
 
     def run(self):
@@ -47,8 +46,6 @@ class Logger(threading.Thread):
             self.task_function()
 
     def cancel(self):
-        for key in list(self.timer_threads.keys()):
-            self.timer_threads[key].cancel()
         self.finished.set() 
 
     def process_event(self):
