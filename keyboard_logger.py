@@ -32,7 +32,7 @@ import os
 import sys
 import signal
 
-class BaseEventClass(threading.Thread):
+class DetailedWriterFirstStage(threading.Thread):
     def __init__(self, event_queue, loggername, *args, **kwargs):
         threading.Thread.__init__(self)
         self.finished = threading.Event()
@@ -42,28 +42,18 @@ class BaseEventClass(threading.Thread):
         self.args = args
         self.kwargs = kwargs
 
-    def cancel(self):
-        self.finished.set()
-
-    def run(self):
-        while not self.finished.isSet():
-                self.task_function(*self.args, **self.kwargs)
-
-class DetailedWriterFirstStage(BaseEventClass):
-    def __init__(self, *args, **kwargs):
-        BaseEventClass.__init__(self, *args, **kwargs)
-
         self.dir_lock = threading.RLock()
         self.timer_threads = {}
         self.task_function = self.process_event
 
     def run(self):
-        BaseEventClass.run(self)
+        while not self.finished.isSet():
+            self.task_function(*self.args, **self.kwargs)
 
     def cancel(self):
         for key in list(self.timer_threads.keys()):
             self.timer_threads[key].cancel()
-        BaseEventClass.cancel(self)
+        self.finished.set() 
 
     def process_event(self):
         try:
