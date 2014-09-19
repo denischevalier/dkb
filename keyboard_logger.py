@@ -126,13 +126,11 @@ class DetailedWriterSecondStage(BaseEventClass):
             if (self.eventlist[:6] == eventlisttmp[:6]):
                 self.eventlist[-1] = self.eventlist[-1] + eventlisttmp[-1]
             else:
-                self.write_to_stderr()
                 self.eventlist = eventlisttmp
         except queue.Empty:
             if self.eventlist[:2] != list(range(2)) and \
                     self.eventlist[:2] != [time.strftime('%Y%m%d'),
                             time.strftime('%H%M')]:
-                        self.write_to_stderr()
                         self.eventlist = list(range(7))
         except:
             pass
@@ -161,16 +159,7 @@ class DetailedWriterSecondStage(BaseEventClass):
 
         return(chr(event.Ascii))
 
-    def write_to_stderr(self):
-        if self.eventlist[:7] != list(range(7)):
-            try:
-                line = self.field_sep.join(self.eventlist)
-                print(('[DEBUG]' + line), file=sys.stderr)
-            except:
-                pass
-
     def cancel(self):
-        self.write_to_stderr()
         self.finished.set()
 
 class KeyboardLogger:
