@@ -60,7 +60,7 @@ class AsyncReader:
 def SigIntHandler(signum, frame):
     print ('[WARNING]SIGINT (Ctrl+C) signal received, continuing:'
             'Please exit keylog_parser.py properly by passing "Scroll_Lock" to stdin.',
-            file=sys.stderr)
+            file=sys.stderr)                                            # Cancel SIGINT to avoid bad multithreads/process/coroutine termination
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, SigIntHandler)                         # Set the signal handler for SIGINT
