@@ -33,14 +33,11 @@ import sys
 import signal
 
 class Logger(threading.Thread):
-    def __init__(self, event_queue, loggername, *args, **kwargs):
+    def __init__(self, event_queue):
         threading.Thread.__init__(self)
         self.finished = threading.Event()
 
         self.q = event_queue
-        self.loggername = loggername
-        self.args = args
-        self.kwargs = kwargs
 
         self.dir_lock = threading.RLock()
         self.timer_threads = {}
@@ -48,7 +45,7 @@ class Logger(threading.Thread):
 
     def run(self):
         while not self.finished.isSet():
-            self.task_function(*self.args, **self.kwargs)
+            self.task_function()
 
     def cancel(self):
         for key in list(self.timer_threads.keys()):
@@ -96,7 +93,7 @@ class KeyboardLogger:
         try:
             self.queues["General"] = queue.Queue(0)
             self.event_threads["General"] = \
-                Logger(self.queues["General"], "General")
+                Logger(self.queues["General"])
         except KeyError:
             print(('[WARN]Not creating thread for section General'),file=sys.stderr)
             pass
