@@ -2,6 +2,8 @@ dkb
 ===
 [Version 0.0.1]
 
+(For english README.md, scroll down the page)
+
 Simple moteur de keybindings pour linux en python.
 
 Attention
