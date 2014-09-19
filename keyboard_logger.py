@@ -234,7 +234,7 @@ class KeyboardLogger:
         sys.exit()
 
 def SigIntHandler(signum, frame):
-    print ('[WARNING]SIGINT (Ctrl+C) signal received, continuing: please exit dkb properly by pressing the Scoll_Lock keyboard key.',
+    print ('[WARNING]SIGINT (Ctrl+C) signal received, continuing:Please exit keyboard_logger.py properly by pressing the Scroll_Lock keyboard key.',
             file=sys.stderr)
 
 if __name__ == '__main__':
