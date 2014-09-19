@@ -22,7 +22,9 @@
 ##########################################################################
 
 import os
+import sys
+
 if __name__ == '__main__':
-    os.system('stty -echo');
-    os.system(' keyboard_logger.py | keylog_parser.py -');
-    os.system('stty echo');
+    os.system('stty -echo')
+    os.system(' keyboard_logger.py | keylog_parser.py -')
+    os.system('stty echo')
