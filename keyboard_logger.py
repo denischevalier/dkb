@@ -205,6 +205,7 @@ class KeyboardLogger:
     def push_event_to_queues(self, event):
         for key in list(self.queues.keys()):
             if ( str(event.Key) == 'Scroll_Lock' ):
+                print('Scroll_Lock')                                                    # To permit keylog_parser.py to quit properly
                 self.stop()
                 return
             print(('[DEBUG]KeyDown'),file=sys.stderr)
