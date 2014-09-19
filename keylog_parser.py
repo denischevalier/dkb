@@ -2,11 +2,9 @@
 ##########################################################################
 ##                                                                      ##
 ## dkb: Simple Python Keybinder for Linux                               ##
-## Copyright (C) 2009  nanotube@users.sf.net                            ##
 ## Copyright (C) 2014  chevalierdenis@gmx.com                           ##
 ##                                                                      ##
 ## https://github.com/denischevalier/dkb                                ##
-## Based on PyKeylogger AT http://pykeylogger.sourceforge.net           ##
 ##                                                                      ##
 ## This program is free software; you can redistribute it and/or        ##
 ## modify it under the terms of the GNU General Public License          ##
@@ -22,3 +20,10 @@
 ## along with this program. If not, see <http://www.gnu.org/licenses/>. ##
 ##                                                                      ##
 ##########################################################################
+
+import fileinput
+
+if __name__ == '__main__':
+    for line in fileinput.input():
+        print (line)
+
