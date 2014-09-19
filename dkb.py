@@ -48,16 +48,6 @@ class BaseEventClass(threading.Thread):
         while not self.finished.isSet():
                 self.task_function(*self.args, **self.kwargs)
 
-    def task_function(self):
-        try:
-            event = self.q.get(timeout=0.05)
-            print(event, file=sys.stderr)
-        except queue.Empty:
-            pass
-        except:
-            print('[WARN]Some exception was caught in the logwriter loop...', file=sys.stderr)
-            pass
-
 class DetailedWriterFirstStage(BaseEventClass):
     def __init__(self, *args, **kwargs):
         BaseEventClass.__init__(self, *args, **kwargs)
