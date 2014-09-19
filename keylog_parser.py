@@ -21,9 +21,14 @@
 ##                                                                      ##
 ##########################################################################
 
+import sys
 import fileinput
 
 if __name__ == '__main__':
-    for line in fileinput.input():
-        print (line)
+    # Always keep the last 4 typed keys
+    buffer = ['', '', '', '']
+    for line in fileinput.input():                  # For each line in input
+        buffer.pop(0)                               # pop the first character in buffer (FIFO)
+        buffer.append(line.rstrip('\n'))            # add the last typed key at the end of the buffer
+        print('[DEBUG]' + buffer, file=sys.stderr)  # [DEBUG] print the buffer
 
