@@ -21,14 +21,15 @@
 ##                                                                      ##
 ##########################################################################
 
-import sys
+import sys, os
 import fileinput
 
 if __name__ == '__main__':
     # Always keep the last 4 typed keys
     buffer = ['', '', '', '']
-    for line in fileinput.input():                  # For each line in input
-        buffer.pop(0)                               # pop the first character in buffer (FIFO)
-        buffer.append(line.rstrip('\n'))            # add the last typed key at the end of the buffer
-        print('[DEBUG]' + str(buffer), file=sys.stderr)  # [DEBUG] print the buffer
+    for line in fileinput.input():                          # For each line in input
+        if len(line.rstrip('\n')):                          # if the line is not only a newline
+            buffer.pop(0)                                   # pop the first character in buffer (FIFO)
+            buffer.append(line.rstrip('\n'))                # add the last typed key at the end of the buffer
+            print('[DEBUG]' + str(buffer), file=sys.stderr) # [DEBUG] print the buffer
 
