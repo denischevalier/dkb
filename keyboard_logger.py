@@ -39,7 +39,6 @@ class Logger(threading.Thread):
 
         self.q = event_queue
 
-        self.dir_lock = threading.RLock()
         self.timer_threads = {}
         self.task_function = self.process_event
 
