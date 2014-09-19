@@ -23,13 +23,40 @@
 
 import asyncio
 import sys
-import fileinput
+import time
+
+class AsyncReader:
+    def __init__(self):
+        self.buffer = ['', '', '', '']                                  # We keep the 4 last keycodes 
+        self.charbuf = ''                                               # Where everything is readed
+
+    def start(self):
+        loop = asyncio.get_event_loop()                                 # Get asyncio loop
+        try:
+            loop.call_soon(self.catch_keycodes, loop)                   # Launch catch_keycodes()
+            loop.run_forever()                                          # Loop
+        finally:
+            loop.close()                                                # in the end quit properly
+
+    def catch_keycodes(self, loop):
+        data = sys.stdin.read(1)                                        # Get the last character
+        if data != '\n':                                                # If we're not at an EOL and there is data
+            self.charbuf += data                                        # Append data to charbuf
+            loop.call_soon(self.catch_keycodes, loop)                   # Loop
+        elif len (self.charbuf):                                        # End of a keycode
+            if self.charbuf == 'Scroll_Lock':                           # If the keycode is Scroll_Lock
+                loop.call_soon_threadsafe(loop.stop())                  # Exit properly
+            asyncio.Task(self.parse_buffer())                           # Call parse_buffer() asynchronously
+            loop.call_soon(self.catch_keycodes, loop)                   # Loop
+
+    @asyncio.coroutine
+    def parse_buffer(self):
+        self.buffer = self.buffer[len(self.buffer)-3:len(self.buffer)]  # Delete buffer[1]
+        self.buffer.append(self.charbuf)                                # Append charbuf to buffer
+        self.charbuf = ''                                               # Empty charbuf
+        print('[DEBUG]' + str(self.buffer), file=sys.stderr)            # Print the keycode
 
 if __name__ == '__main__':
-    buffer = ['', '', '', '']                               # Always keep the last 4 typed keys
-    for line in fileinput.input():                          # For each line in input
-        if len(line.rstrip('\n')):                          # if the line is not only a newline
-            buffer.pop(0)                                   # pop the first character in buffer (FIFO)
-            buffer.append(line.rstrip('\n'))                # add the last typed key at the end of the buffer
-            print('[DEBUG]' + str(buffer), file=sys.stderr) # [DEBUG] print the buffer
+    ar = AsyncReader()                                                  # Create the object
+    ar.start()                                                          # Start the event loop
 
