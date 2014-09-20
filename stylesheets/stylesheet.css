@@ -69,6 +69,8 @@ header h2 {
 }
 
 #downloads .btn {
+  width: 150%;
+  maring: auto;
   display: inline-block;
   text-align: center;
   margin: 0;
