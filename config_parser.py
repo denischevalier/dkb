@@ -28,7 +28,7 @@ import sys
 
 class ConfigParser():
     def __init__(self, config_file):
-        whith open(config_file, "rt") as in_file:                                           # Open the config file in read only mode 
+        with open(config_file, "rt") as in_file:                                           # Open the config file in read only mode 
             text = in_file.read()                                                           # Put its content in memory
         self.config = json.loads(text)                                                      # Parse json config
         self.verif_config()                                                                 # Check the parsed data for errors
