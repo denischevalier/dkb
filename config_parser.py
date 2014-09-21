@@ -28,7 +28,7 @@ import sys
 
 class ConfigParser():
     def __init__(self, config_file):
-        with open(config_file, "rt") as in_file:                                           # Open the config file in read only mode 
+        with open(config_file, "rt") as in_file:                                            # Open the config file in read only mode 
             text = in_file.read()                                                           # Put its content in memory
         self.config = json.loads(text)                                                      # Parse json config
         self.verif_config()                                                                 # Check the parsed data for errors
@@ -39,20 +39,20 @@ class ConfigParser():
         # Test the root config object
         if len(self.config) == 0:                                                           # If the object is empty, return quitely
             return
-        if str(type(self.config)) != "<class 'dict'>":                                           # The result object must be of type 'dict'
+        if str(type(self.config)) != "<class 'dict'>":                                      # The result object must be of type 'dict'
             raise Exception("The root type object is " + str(type(self.config)) + 
                     " instead of <class 'dict'>")
 
         # Test the sub objects
         for key in self.config:                                                             # Loop over the config object
-            if str(type(self.config[key])) != "<class 'list'>":                                               # The elements of the config oject must be
+            if str(type(self.config[key])) != "<class 'list'>":                             # The elements of the config oject must be
                                                                                             # of type 'list'
                 raise Exception('The elements of the config object must be lists.\n'
                         'They actually are ' + str(type(self.config[key])))
-            if len(self.config[key]) < 1 or len(self.config[key]) > 4:                                               # Each element must have a maximum of 4 members
+            if len(self.config[key]) < 1 or len(self.config[key]) > 4:                      # Each element must have a maximum of 4 members
                 raise Exception('The lists in config obj can\'t be longer than 4 members.')
-            for elt in self.config[key]:                                                                 # Loop over subelements
-                if str(type(elt)) != "<class 'str'>":                                            # They must be strings
+            for elt in self.config[key]:                                                    # Loop over subelements
+                if str(type(elt)) != "<class 'str'>":                                       # They must be strings
                     raise Exception('Each sublist member must be of type <class \'str\'>.\n'
                             'Found type ' + str(type(elt)) + ' instead.')
 
@@ -76,5 +76,5 @@ class ConfigParser():
 if __name__ == '__main__':
     # For debugging purposes only
     cp = ConfigParser('config_example.json')
-    print (cp.get_config_action(['x', 'Ctrl', 'Maj', 'p']))
+    print ('[DEBUG]' + cp.get_config_action(['x', 'Ctrl', 'Maj', 'p']), file=sys.stderr)
     sys.exit(0)
