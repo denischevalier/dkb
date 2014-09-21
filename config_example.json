@@ -1,4 +1,4 @@
 {
-    'echo Hello, World': 
-        ['Ctrl','Maj','p']
+    "echo Hello, World": 
+        ["Ctrl","Maj","p"]
 }
