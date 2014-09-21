@@ -58,8 +58,8 @@ class ConfigParser():
 
     def get_config_action(self, buffer):
         for action in self.config:                                                          # Loop over the config object
-            if set(self.config[action]) == set(buffer[4-len(self.config[action]):]):        # Compare the len(config keybind) last items in buffer
-                                                                                            # The order doesn't matter
+            if self.config[action] == buffer[4-len(self.config[action]):]:                  # Compare the len(config keybind) last items in buffer
+                                                                                            # Should the order not matter ? (should I use set?)
                 return action                                                               # If there is a match, return the action
         return None                                                                         # Else return None
 
