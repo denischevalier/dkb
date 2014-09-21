@@ -39,22 +39,22 @@ class ConfigParser():
         # Test the root config object
         if len(self.config) == 0:                                                           # If the object is empty, return quitely
             return
-        if type(self.config) != "<class 'dict'>":                                           # The result object must be of type 'dict'
-            raise Exception("The root type object is " + type(self.config) + 
+        if str(type(self.config)) != "<class 'dict'>":                                           # The result object must be of type 'dict'
+            raise Exception("The root type object is " + str(type(self.config)) + 
                     " instead of <class 'dict'>")
 
         # Test the sub objects
         for val in self.config:                                                             # Loop over the config object
-            if type(val) != "<class 'list'>":                                               # The elements of the config oject must be
+            if str(type(val)) != "<class 'list'>":                                               # The elements of the config oject must be
                                                                                             # of type 'list'
                 raise Exception('The elements of the config object must be lists.\n'
-                        'They actually are ' + type(val))
+                        'They actually are ' + str(type(val)))
             if len(val) < 1 and len(val) > 4:                                               # Each element must have a maximum of 4 members
                 raise Exception('The lists in config obj can\'t be longer than 4 members.')
             for elt in val:                                                                 # Loop over subelements
-                if type(elt) != "<class 'str'>":                                            # They must be strings
+                if str(type(elt)) != "<class 'str'>":                                            # They must be strings
                     raise Exception('Each sublist member must be of type <class \'str\'>.\n'
-                            'Found type ' + type(elt) + ' instead.')
+                            'Found type ' + str(type(elt)) + ' instead.')
 
     def get_config_action(self, buffer):
         for action in self.config:                                                          # Loop over the config object
