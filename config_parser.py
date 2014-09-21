@@ -72,3 +72,9 @@ class ConfigParser():
                     return action
         return None                                                                         # Else return None
 
+
+if __name__ == '__main__':
+    # For debugging purposes only
+    cp = ConfigParser('config_example.json')
+    print (cp.get_config_action(['x', 'Ctrl', 'Maj', 'p']))
+    sys.exit(0)
