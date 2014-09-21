@@ -49,7 +49,7 @@ class ConfigParser():
                                                                                             # of type 'list'
                 raise Exception('The elements of the config object must be lists.\n'
                         'They actually are ' + str(type(self.config[key])))
-            if !len(self.config[key]) or len(self.config[key]) > 4:                                               # Each element must have a maximum of 4 members
+            if len(self.config[key]) < 1 or len(self.config[key]) > 4:                                               # Each element must have a maximum of 4 members
                 raise Exception('The lists in config obj can\'t be longer than 4 members.')
             for elt in self.config[key]:                                                                 # Loop over subelements
                 if str(type(elt)) != "<class 'str'>":                                            # They must be strings
