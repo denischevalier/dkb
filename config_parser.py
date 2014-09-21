@@ -22,3 +22,11 @@
 ## along with this program. If not, see <http://www.gnu.org/licenses/>. ##
 ##                                                                      ##
 ##########################################################################
+
+import json
+
+def ConfigParser(config_file):
+    whith open(config_file, "rt") as in_file:           # Open the config file in read only mode 
+        text = in_file.read()                           # Put its content in memory
+    config = json.loads(text)                           # Parse json config
+    return config                                       # Return the resulting list
