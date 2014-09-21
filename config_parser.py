@@ -59,13 +59,13 @@ class ConfigParser():
     def get_config_action(self, buffer):
         for action in self.config:                                                          # Loop over the config object
             if len(self.config[action]) == 1:                                               # A keybind can be of either 1, 2, 3 or 4 keys
-                if buffer[4] == self.config[action]:                                        # Return action if the actual buffer matches the
+                if buffer[3] == self.config[action]:                                        # Return action if the actual buffer matches the
                     return action                                                           # config.
             if len(self.config[action]) == 2:
-                if buffer[3:4] == self.config[action]:
+                if buffer[2:3] == self.config[action]:
                     return action
             if len(self.config[action]) == 3:
-                if buffer[2:4] == self.config[action]:
+                if buffer[1:3] == self.config[action]:
                     return action
             if len(self.config[action]) == 4:
                 if buffer == self.config[action]:
@@ -76,5 +76,6 @@ class ConfigParser():
 if __name__ == '__main__':
     # For debugging purposes only
     cp = ConfigParser('config_example.json')
-    print ('[DEBUG]' + cp.get_config_action(['x', 'Ctrl', 'Maj', 'p']), file=sys.stderr)
+    action = cp.get_config_action(['x', 'Ctrl', 'Maj', 'p'])
+    print ('[DEBUG]' + str(action), file=sys.stderr)
     sys.exit(0)
