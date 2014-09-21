@@ -44,14 +44,14 @@ class ConfigParser():
                     " instead of <class 'dict'>")
 
         # Test the sub objects
-        for val in self.config:                                                             # Loop over the config object
-            if str(type(val)) != "<class 'list'>":                                               # The elements of the config oject must be
+        for key in self.config:                                                             # Loop over the config object
+            if str(type(self.config[key])) != "<class 'list'>":                                               # The elements of the config oject must be
                                                                                             # of type 'list'
                 raise Exception('The elements of the config object must be lists.\n'
-                        'They actually are ' + str(type(val)))
-            if len(val) < 1 and len(val) > 4:                                               # Each element must have a maximum of 4 members
+                        'They actually are ' + str(type(self.config[key])))
+            if !len(self.config[key]) or len(self.config[key]) > 4:                                               # Each element must have a maximum of 4 members
                 raise Exception('The lists in config obj can\'t be longer than 4 members.')
-            for elt in val:                                                                 # Loop over subelements
+            for elt in self.config[key]:                                                                 # Loop over subelements
                 if str(type(elt)) != "<class 'str'>":                                            # They must be strings
                     raise Exception('Each sublist member must be of type <class \'str\'>.\n'
                             'Found type ' + str(type(elt)) + ' instead.')
