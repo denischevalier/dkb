@@ -1,0 +1,8 @@
+{
+    "echo Hello, World": 
+        ["Control_L","Shift_L","P"],
+    "echo Bla":
+        ["F2"],
+    "echo Blo":
+        ["Control_L", "h"]
+}

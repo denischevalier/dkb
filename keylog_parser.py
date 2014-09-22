@@ -24,7 +24,12 @@
 import signal
 import asyncio
 import sys
+import os
 import time
+
+from config_parser import ConfigParser
+
+config_path='config_example.json'
 
 class AsyncReader:
     def __init__(self):
@@ -52,10 +57,17 @@ class AsyncReader:
 
     @asyncio.coroutine
     def parse_buffer(self):
-        self.buffer = self.buffer[len(self.buffer)-3:len(self.buffer)]  # Delete buffer[1]
+        self.buffer = self.buffer[len(self.buffer)-3:len(self.buffer)]  # Delete buffer[0]
         self.buffer.append(self.charbuf)                                # Append charbuf to buffer
         self.charbuf = ''                                               # Empty charbuf
         print('[DEBUG]' + str(self.buffer), file=sys.stderr)            # Print the keycode
+        cp = ConfigParser(config_path)                                  # ReParse the Config file as it permits user
+                                                                        # to modify it on the fly
+        action = cp.get_config_action(self.buffer)                      # Try the current buffer
+        if action is not None:                                          # Did anything match ?
+            print('[DEBUG]' + str(action), file=sys.stderr)             # Debugging informations: what did match
+            os.system(action)                                           # Execute the command -- HAVE TO PARALLELIZE IT
+
 
 def SigIntHandler(signum, frame):
     print ('[WARNING]SIGINT (Ctrl+C) signal received, continuing:'
