@@ -52,7 +52,7 @@ class AsyncReader:
 
     @asyncio.coroutine
     def parse_buffer(self):
-        self.buffer = self.buffer[len(self.buffer)-3:len(self.buffer)]  # Delete buffer[1]
+        self.buffer = self.buffer[len(self.buffer)-3:len(self.buffer)]  # Delete buffer[0]
         self.buffer.append(self.charbuf)                                # Append charbuf to buffer
         self.charbuf = ''                                               # Empty charbuf
         print('[DEBUG]' + str(self.buffer), file=sys.stderr)            # Print the keycode
