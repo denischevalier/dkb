@@ -3,6 +3,6 @@
         ["Control_L","Shift_L","P"],
     "echo Bla":
         ["F2"],
-    "echo Test again":
+    "echo Do some long action&":
         ["Control_L", "h"]
 }
