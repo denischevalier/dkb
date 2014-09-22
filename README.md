@@ -2,6 +2,8 @@ dkb
 ===
 [Version 0.0.1]
 
+(For english README.md, scroll down the page)
+
 Simple moteur de keybindings pour linux en python.
 
 Attention
@@ -10,7 +12,7 @@ Ce logiciel est en cours de développement intensif. Les fonctionnalités viendr
 
 Description technique
 ---
-Ce logiciel est codé en python3 orienté objet parallèle. Il utilise peu de dépendances: principalement Xlib, et pillow. Ce dernier est inclus dans la source.dkb est un fork, une simplification (il n'en utilise qu'une infime partie) et une mise à jour de pykeylogger @ http://sourceforge.com/projects/pykeylogger.
+Ce logiciel est codé en python3 orienté objet parallèle. Il utilise peu de dépendances: principalement Xlib, et pillow. dkb est un fork, une simplification (il n'en utilise qu'une infime partie) et une mise à jour de pykeylogger @ http://sourceforge.com/projects/pykeylogger.
 
 Instructions
 ---
@@ -37,7 +39,7 @@ This software is under heavy development. Fonctionnalities will comme as soon as
 
 Technical description
 ---
-This software is coded in python3 using OOP and Parallelizm. It needs just a few dependancies: mostly xlib, and pillow. This last one is included in the source.dkb is forked, simplified (it uses just a very little subset of the original software) and updated from pykeylogger @ http://sourceforge.com/projects/pykeylogger.
+This software is coded in python3 using OOP and Parallelizm. It needs just a few dependancies: mostly xlib, and pillow. dkb is forked, simplified (it uses just a very little subset of the original software) and updated from pykeylogger @ http://sourceforge.com/projects/pykeylogger.
 
 Instructions
 ---
