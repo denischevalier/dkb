@@ -26,7 +26,7 @@ import asyncio
 import sys
 import time
 
-import config_parser
+from config_parser import ConfigParser
 
 config_path='config_example.json'
 
@@ -63,7 +63,7 @@ class AsyncReader:
         cp = ConfigParser(config_path)                                  # ReParse the Config file as it permits user
                                                                         # to modify it on the fly
         action = cp.get_config_action(self.buffer)                      # Try the current buffer
-        if len(action) is not None:                                     # Did anything match ?
+        if action is not None:                                          # Did anything match ?
             print('[DEBUG]' + str(action), file=sys.stderr)             # Debugging informations: what did match
             os.system(action)                                           # Execute the command -- HAVE TO PARALLELIZE IT
 
