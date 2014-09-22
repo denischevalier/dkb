@@ -26,6 +26,7 @@ import asyncio
 import sys
 import os
 import time
+import atexit
 
 from config_parser import ConfigParser
 
@@ -52,11 +53,11 @@ class AsyncReader:
         elif len (self.charbuf):                                        # End of a keycode
             if self.charbuf == 'Scroll_Lock':                           # If the keycode is Scroll_Lock
                 loop.call_soon_threadsafe(loop.stop())                  # Exit properly
-            asyncio.Task(self.parse_buffer())                           # Call parse_buffer() asynchronously
+            asyncio.Task(self.parse_buffer(loop))                       # Call parse_buffer() asynchronously
             loop.call_soon(self.catch_keycodes, loop)                   # Loop
 
     @asyncio.coroutine
-    def parse_buffer(self):
+    def parse_buffer(self, loop):
         self.buffer = self.buffer[len(self.buffer)-3:len(self.buffer)]  # Delete buffer[0]
         self.buffer.append(self.charbuf)                                # Append charbuf to buffer
         self.charbuf = ''                                               # Empty charbuf
@@ -66,8 +67,9 @@ class AsyncReader:
         action = cp.get_config_action(self.buffer)                      # Try the current buffer
         if action is not None:                                          # Did anything match ?
             print('[DEBUG]' + str(action), file=sys.stderr)             # Debugging informations: what did match
-            os.system(action)                                           # Execute the command -- HAVE TO PARALLELIZE IT
-
+            os.system(action)                                           # Execute the command 
+                                                                        # To execute in another child, just ad & at 
+                                                                        # the end of command in config file
 
 def SigIntHandler(signum, frame):
     print ('[WARNING]SIGINT (Ctrl+C) signal received, continuing:'
