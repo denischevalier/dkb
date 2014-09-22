@@ -1,6 +1,8 @@
 {
     "echo Hello, World": 
-        ["Ctrl","Maj","p"],
+        ["Control_L","Shift_L","P"],
     "echo Bla":
-        ["F2"]
+        ["F2"],
+    "echo Blo":
+        ["Control_L", "h"]
 }
