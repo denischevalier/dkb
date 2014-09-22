@@ -26,7 +26,6 @@ import asyncio
 import sys
 import os
 import time
-import atexit
 
 from config_parser import ConfigParser
 
@@ -53,11 +52,11 @@ class AsyncReader:
         elif len (self.charbuf):                                        # End of a keycode
             if self.charbuf == 'Scroll_Lock':                           # If the keycode is Scroll_Lock
                 loop.call_soon_threadsafe(loop.stop())                  # Exit properly
-            asyncio.Task(self.parse_buffer(loop))                       # Call parse_buffer() asynchronously
+            asyncio.Task(self.parse_buffer())                       # Call parse_buffer() asynchronously
             loop.call_soon(self.catch_keycodes, loop)                   # Loop
 
     @asyncio.coroutine
-    def parse_buffer(self, loop):
+    def parse_buffer(self):
         self.buffer = self.buffer[len(self.buffer)-3:len(self.buffer)]  # Delete buffer[0]
         self.buffer.append(self.charbuf)                                # Append charbuf to buffer
         self.charbuf = ''                                               # Empty charbuf
