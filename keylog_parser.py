@@ -33,7 +33,8 @@ config_path='config_example.json'
 
 class AsyncReader:
     def __init__(self):
-        self.buffer = ['', '', '', '']                                  # We keep the 4 last keycodes 
+        self.buffer = ['', '', '', '']                                  # We keep the 4 last keycodes
+        self.lastinputtimestamp = 0;
         self.charbuf = ''                                               # Where everything is readed
 
     def start(self):
@@ -57,7 +58,12 @@ class AsyncReader:
 
     @asyncio.coroutine
     def parse_buffer(self):
-        self.buffer = self.buffer[len(self.buffer)-3:len(self.buffer)]  # Delete buffer[0]
+        if time.time() - self.lastinputtimestamp > 0.5:                 # Authorize a maximum of 0.5s between two keystrokes
+            self.buffer = ['', '', '', '']                              # If not, empty buffer
+        else:                                                           # If it's user did all the keys in a short amount of time
+            self.buffer = \
+                self.buffer[len(self.buffer)-3:len(self.buffer)]        # Delete buffer[0]
+        self.lastinputtimestamp = time.time()
         self.buffer.append(self.charbuf)                                # Append charbuf to buffer
         self.charbuf = ''                                               # Empty charbuf
         print('[DEBUG]' + str(self.buffer), file=sys.stderr)            # Print the keycode
@@ -66,8 +72,9 @@ class AsyncReader:
         action = cp.get_config_action(self.buffer)                      # Try the current buffer
         if action is not None:                                          # Did anything match ?
             print('[DEBUG]' + str(action), file=sys.stderr)             # Debugging informations: what did match
-            os.system(action)                                           # Execute the command -- HAVE TO PARALLELIZE IT
-
+            os.system(action)                                           # Execute the command 
+                                                                        # To execute in another child, just ad & at 
+                                                                        # the end of command in config file
 
 def SigIntHandler(signum, frame):
     print ('[WARNING]SIGINT (Ctrl+C) signal received, continuing:'
