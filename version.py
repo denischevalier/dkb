@@ -1,6 +1,6 @@
 name = "dkb"
 description = "Simple Python Keybinder for linux (Xorg)"
-version = "git"
+version = "0.1.0"
 url = "https://github.com/denischevalier/dkb/"
 license = "GPLv3"
 author = "Denis Chevalier"
