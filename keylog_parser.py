@@ -33,7 +33,8 @@ config_path='config_example.json'
 
 class AsyncReader:
     def __init__(self):
-        self.buffer = ['', '', '', '']                                  # We keep the 4 last keycodes 
+        self.buffer = ['', '', '', '']                                  # We keep the 4 last keycodes
+        self.lastinputtimestamp = 0;
         self.charbuf = ''                                               # Where everything is readed
 
     def start(self):
@@ -52,12 +53,17 @@ class AsyncReader:
         elif len (self.charbuf):                                        # End of a keycode
             if self.charbuf == 'Scroll_Lock':                           # If the keycode is Scroll_Lock
                 loop.call_soon_threadsafe(loop.stop())                  # Exit properly
-            asyncio.Task(self.parse_buffer())                       # Call parse_buffer() asynchronously
+            asyncio.Task(self.parse_buffer())                           # Call parse_buffer() asynchronously
             loop.call_soon(self.catch_keycodes, loop)                   # Loop
 
     @asyncio.coroutine
     def parse_buffer(self):
-        self.buffer = self.buffer[len(self.buffer)-3:len(self.buffer)]  # Delete buffer[0]
+        if time.time() - self.lastinputtimestamp > 0.5:                 # Authorize a maximum of 0.5s between two keystrokes
+            self.buffer = ['', '', '', '']                              # If not, empty buffer
+        else:                                                           # If it's user did all the keys in a short amount of time
+            self.buffer = \
+                self.buffer[len(self.buffer)-3:len(self.buffer)]        # Delete buffer[0]
+        self.lastinputtimestamp = time.time()
         self.buffer.append(self.charbuf)                                # Append charbuf to buffer
         self.charbuf = ''                                               # Empty charbuf
         print('[DEBUG]' + str(self.buffer), file=sys.stderr)            # Print the keycode
