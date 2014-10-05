@@ -29,7 +29,7 @@ import time
 
 from config_parser import ConfigParser
 
-config_path='config_example.json'
+config_path='config.json'
 
 class AsyncReader:
     def __init__(self):
