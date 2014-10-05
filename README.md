@@ -6,7 +6,7 @@ Simple moteur de keybindings pour linux en python.
 
 Attention
 ---
-La version 0.2.1 a été publiée. A voir sur la page release.
+La version 0.2.2 a été publiée. A voir sur la page release.
 
 Description technique
 ---
