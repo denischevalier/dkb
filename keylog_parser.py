@@ -58,7 +58,8 @@ class AsyncReader:
 
     @asyncio.coroutine
     def parse_buffer(self):
-        if time.time() - self.lastinputtimestamp > 0.5:                 # Authorize a maximum of 0.5s between two keystrokes
+        if (time.time() - self.lastinputtimestamp > 0.5 and             # Authorize a maximum of 0.5s between two keystrokes
+            self.buffer[0:-1] != ['', '', '']):                         # unless it's only one key in the buffer (case of single key shorcuts)
             self.buffer = ['', '', '', '']                              # If not, empty buffer
         else:                                                           # If it's user did all the keys in a short amount of time
             self.buffer = \
