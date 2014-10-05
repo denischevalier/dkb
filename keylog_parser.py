@@ -29,7 +29,7 @@ import time
 
 from config_parser import ConfigParser
 
-config_path='config_example.json'
+config_path='config.json'
 
 class AsyncReader:
     def __init__(self):
@@ -54,18 +54,17 @@ class AsyncReader:
             if self.charbuf == 'Scroll_Lock':                           # If the keycode is Scroll_Lock
                 loop.call_soon_threadsafe(loop.stop())                  # Exit properly
             asyncio.Task(self.parse_buffer())                           # Call parse_buffer() asynchronously
+            self.parse_buffer()
             loop.call_soon(self.catch_keycodes, loop)                   # Loop
 
     @asyncio.coroutine
     def parse_buffer(self):
-        if time.time() - self.lastinputtimestamp > 0.5:                 # Authorize a maximum of 0.5s between two keystrokes
-            self.buffer = ['', '', '', '']                              # If not, empty buffer
-        else:                                                           # If it's user did all the keys in a short amount of time
-            self.buffer = \
+        self.buffer = \
                 self.buffer[len(self.buffer)-3:len(self.buffer)]        # Delete buffer[0]
-        self.lastinputtimestamp = time.time()
         self.buffer.append(self.charbuf)                                # Append charbuf to buffer
         self.charbuf = ''                                               # Empty charbuf
+                                                                        # To execute in another child, just ad & at 
+                                                                        # the end of command in config file
         print('[DEBUG]' + str(self.buffer), file=sys.stderr)            # Print the keycode
         cp = ConfigParser(config_path)                                  # ReParse the Config file as it permits user
                                                                         # to modify it on the fly
@@ -73,8 +72,9 @@ class AsyncReader:
         if action is not None:                                          # Did anything match ?
             print('[DEBUG]' + str(action), file=sys.stderr)             # Debugging informations: what did match
             os.system(action)                                           # Execute the command 
-                                                                        # To execute in another child, just ad & at 
-                                                                        # the end of command in config file
+            if time.time() - self.lastinputtimestamp > 0.5:             # Authorize a maximum of 0.5s between two keystrokes
+                self.buffer = ['', '', '', '']                          # If not, empty buffer
+        self.lastinputtimestamp = time.time()
 
 def SigIntHandler(signum, frame):
     print ('[WARNING]SIGINT (Ctrl+C) signal received, continuing:'

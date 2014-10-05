@@ -1,0 +1,32 @@
+{
+    "_comment":
+        "Those are multimedia keys on the corsair K70 vengeance keyboard",
+    "_comment":
+        "Mute key",
+    "amixer -q sset Master 100%-": 
+        ["[269025042]"],
+    "_comment":
+        "Volume up key",
+    "amixer -q sset Master 1%+":
+        ["[269025043]"],
+    "_comment":
+        "Volume down key",
+    "amixer -q sset Master 3%-":
+        ["[269025041]"],
+    "_comment":
+        "Stop key: bind it to moc unless mplayer is running, (mplayer autodetects multimedia keys)",
+    "if [ 'EX' == 'EX'\"$(pidof mplayer)\" ]; then mocp -s; fi":
+        ["[269025045]"],
+    "_comment":
+        "Prev key: as before, mocp if no mplayer instance running",
+    "if [ 'EX' == 'EX'\"$(pidof mplayer)\" ]; then mocp -r; fi":
+        ["[269025046]"],
+    "_comment":
+        "Play/pause key: mocp if not mplayer",
+    "if [ 'EX' == 'EX'\"$(pidof mplayer)\" ]; then mocp -G; fi":
+        ["[269025044]"],
+    "_comment":
+        "Next key: just as before",
+    "if [ 'EX' == 'EX'\"$(pidof mplayer)\" ]; then mocp -f; fi":
+        ["[269025047]"]
+}
