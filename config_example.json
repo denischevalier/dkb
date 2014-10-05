@@ -1,8 +1,16 @@
 {
+    "_comment":
+        "Elements with key '_comment' are ignored",
+    "_comment":
+        "You can bind any shell command to any four or less key combination.",
     "echo Hello, World": 
         ["Control_L","Shift_L","P"],
+    "_comment":
+        "Even to a single key.",
     "echo Bla":
         ["F2"],
+    "_comment":
+        "To do long tasks, just use the & shell operator",
     "echo Do some long action&":
         ["Control_L", "h"]
 }

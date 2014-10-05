@@ -25,12 +25,16 @@
 
 import json
 import sys
+from copy import deepcopy
 
 class ConfigParser():
     def __init__(self, config_file):
         with open(config_file, "rt") as in_file:                                            # Open the config file in read only mode 
             text = in_file.read()                                                           # Put its content in memory
-        self.config = json.loads(text)                                                      # Parse json config
+        try:
+            self.config = json.loads(text)                                                  # Parse json config
+        except:
+            print ('[WARNING] Error loading configuration file', file=sys.stderr)           # Warn on parsing error
         self.verif_config()                                                                 # Check the parsed data for errors
 
     def verif_config(self):
@@ -43,8 +47,15 @@ class ConfigParser():
             raise Exception("The root type object is " + str(type(self.config)) + 
                     " instead of <class 'dict'>")
 
+        newconf = deepcopy(self.config)                                                     # As some elements (comments) are deleted from 
+                                                                                            # self.config during iteration, make the changes
+                                                                                            # on a copy that will be synced after
         # Test the sub objects
         for key in self.config:                                                             # Loop over the config object
+            if str(key) == '_comment':                                                      # Don't look at comments in config file.
+                del (newconf[key])                                                          # Delete the comment line from the newconf copy of
+                                                                                            # self.config
+                continue                                                                    # Test the next 
             if str(type(self.config[key])) != "<class 'list'>":                             # The elements of the config oject must be
                                                                                             # of type 'list'
                 raise Exception('The elements of the config object must be lists.\n'
@@ -55,6 +66,7 @@ class ConfigParser():
                 if str(type(elt)) != "<class 'str'>":                                       # They must be strings
                     raise Exception('Each sublist member must be of type <class \'str\'>.\n'
                             'Found type ' + str(type(elt)) + ' instead.')
+        self.config = newconf
 
     def get_config_action(self, buffer):
         for action in self.config:                                                          # Loop over the config object
