@@ -3,7 +3,7 @@
         "Those are multimedia keys on the corsair K70 vengeance keyboard",
     "_comment":
         "Mute key",
-    "amixer -q sset Master 100%-": 
+    "amixer -q set Master toggle": 
         ["[269025042]"],
     "_comment":
         "Volume up key",
